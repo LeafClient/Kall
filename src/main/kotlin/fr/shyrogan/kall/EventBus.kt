@@ -91,9 +91,9 @@ class EventBus(private val subscriptionExplorer: SubscriptionExplorer = FieldExp
     }
 
     /**
-     * Publishes [message] to the concerned [Dispatcher] if it exists.
+     * Dispatch [message] to the concerned [Dispatcher] if it exists.
      */
-    fun <T: Any> publish(message: T): T {
+    fun <T: Any> dispatch(message: T): T {
         val dispatcherInstance = dispatcherMap[message::class.java] ?: return message
         dispatcherInstance as Dispatcher<T>
 

@@ -9,7 +9,7 @@ Once you added the library into your project, you'll need to create a new EventB
 If you there's only a single event bus in your project I'd recommend using an object, otherwise
 store it into a variable for example:
 ````kotlin
-object Publisher: EventBus()
+object MyEventBus: EventBus()
 ````
 
 Now, you need to declare subscriptions, the inline funtion ``subscription`` allows
@@ -25,11 +25,11 @@ just shows you they are available.
 
 Now we just need to register our class instance to the EventManager using
 ````kotlin
-Publisher.exploreAndRegister(classInstance)
+MyEventBus.exploreAndRegister(classInstance)
 ````
 and call our message using
 ````kotlin
-Publisher.publish("Hewlo GitHub")
+MyEventBus.dispatch("Hewlo GitHub")
 ````
 
 Which results into:

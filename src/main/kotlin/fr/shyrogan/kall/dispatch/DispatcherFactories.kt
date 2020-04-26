@@ -36,7 +36,7 @@ object DispatcherFactories {
      * Returns the fastest [Dispatcher] for [listeners]
      */
     @Suppress("unchecked_cast")
-    fun <T: Any> findFor(listeners: MutableList<Subscription<T>>)
+    fun <T: Any> findFor(listeners: List<Subscription<T>>)
             = (customDispatchers.firstOrNull { it.condition(listeners.size) } as DispatcherFactory<T>?
             ?: defaultDispatchers.first { it.condition(listeners.size) } as DispatcherFactory<T>)
             .supplier(listeners)
@@ -46,12 +46,12 @@ object DispatcherFactories {
 /**
  * A type alias used by the [DispatcherFactories]
  */
-typealias DispatcherSupplier<T> = (MutableList<Subscription<T>>) -> Dispatcher<T>
+typealias DispatcherSupplier<T> = (List<Subscription<T>>) -> Dispatcher<T>
 
 /**
  * A type alias used by the [DispatcherFactories]
  */
-typealias DispatcherCondition = (Int) -> Boolean
+typealias DispatcherCondition = (size: Int) -> Boolean
 
 /**
  * A class used to make the
