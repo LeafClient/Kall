@@ -1,10 +1,11 @@
 plugins {
     java
     kotlin("jvm") version "1.4-M1"
+    `maven-publish`
 }
 
 group = "fr.shyrogan"
-version = "0.0.1-pre"
+version = "0.0.2-pre"
 
 repositories {
     maven("https://dl.bintray.com/kotlin/kotlin-eap")
@@ -25,5 +26,13 @@ tasks {
     }
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
+    }
+}
+
+publishing {
+    publications {
+        register("mavenJava", MavenPublication::class) {
+            from(components["java"])
+        }
     }
 }
