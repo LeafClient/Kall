@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation("com.github.LeafClient", "Kall", "1.0.0")
     testImplementation("junit", "junit", "4.12")
 }
 

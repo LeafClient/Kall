@@ -6,7 +6,7 @@ import fr.shyrogan.kall.explorer.SubscriptionExplorer
 import fr.shyrogan.kall.explorer.implementation.FieldExplorer
 
 @Suppress("unchecked_cast")
-class EventBus(private val subscriptionExplorer: SubscriptionExplorer = FieldExplorer) {
+open class EventBus(private val subscriptionExplorer: SubscriptionExplorer = FieldExplorer) {
 
     /**
      * Associates a class to its [Dispatcher] instance.
