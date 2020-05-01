@@ -1,5 +1,6 @@
 package fr.shyrogan.kall.dispatch.implementation
 
+import fr.shyrogan.kall.Cancellable
 import fr.shyrogan.kall.Subscription
 import fr.shyrogan.kall.dispatch.Dispatcher
 import fr.shyrogan.kall.dispatch.DispatcherCondition
@@ -18,8 +19,11 @@ class OptimizedDispatcher<T: Any>(subscriptions: MutableList<Subscription<T>>): 
     override fun dispatch(message: T) {
         // Invoke each listeners
         val size = subscriptions.size
-        for(i in 0 until size)
+        for(i in 0 until size) {
             subscriptions[i].receive(message)
+            if(message is Cancellable && message.isCancelled)
+                break
+        }
     }
 
     /**
