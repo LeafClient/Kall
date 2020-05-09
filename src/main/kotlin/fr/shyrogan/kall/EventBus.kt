@@ -21,7 +21,6 @@ open class EventBus(private val subscriptionExplorer: SubscriptionExplorer = Fie
         subscriptionExplorer.explore(instance)
                 .groupBy { it.topic }
                 .forEach { (_, subscription) ->
-                    println(subscription)
                     registerAll(subscription)
                 }
     }
