@@ -1,6 +1,6 @@
 package fr.shyrogan.kall.dispatch.implementation
 
-import fr.shyrogan.kall.Cancellable
+import fr.shyrogan.kall.message.Cancellable
 import fr.shyrogan.kall.Subscription
 import fr.shyrogan.kall.dispatch.Dispatcher
 import fr.shyrogan.kall.dispatch.DispatcherCondition

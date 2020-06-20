@@ -2,11 +2,9 @@ package fr.shyrogan.kall
 
 import fr.shyrogan.kall.dispatch.Dispatcher
 import fr.shyrogan.kall.dispatch.DispatcherFactories
-import fr.shyrogan.kall.explorer.SubscriptionExplorer
-import fr.shyrogan.kall.explorer.implementation.FieldExplorer
 
 @Suppress("unchecked_cast")
-open class EventBus(private val subscriptionExplorer: SubscriptionExplorer = FieldExplorer) {
+open class EventBus() {
 
     /**
      * Associates a class to its [Dispatcher] instance.
@@ -14,27 +12,17 @@ open class EventBus(private val subscriptionExplorer: SubscriptionExplorer = Fie
     private val dispatcherMap = mutableMapOf<Class<*>, Dispatcher<*>>()
 
     /**
-     * Explores [instance] using the [SubscriptionExplorer] and register each [Subscription]
-     * found.
+     * Registers each subscriptions contained by the [receiver]
      */
-    fun exploreAndRegister(instance: Any) {
-        subscriptionExplorer.explore(instance)
-                .groupBy { it.topic }
-                .forEach { (_, subscription) ->
-                    registerAll(subscription)
-                }
+    fun register(receiver: Receiver) = receiver.subscriptions.forEach {
+        register(it)
     }
 
     /**
-     * Explores [instance] using the [SubscriptionExplorer] and register each [Subscription]
-     * found.
+     * Registers each subscriptions contained by the [receiver]
      */
-    fun exploreAndUnregister(instance: Any) {
-        subscriptionExplorer.explore(instance)
-                .groupBy { it.topic }
-                .forEach { (_, subscription) ->
-                    unregisterAll(subscription)
-                }
+    fun unregister(receiver: Receiver) = receiver.subscriptions.forEach {
+        unregister(it)
     }
 
     /**

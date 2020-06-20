@@ -1,4 +1,4 @@
-package fr.shyrogan.kall
+package fr.shyrogan.kall.message
 
 /**
  * Represents an object that can be cancelled using the [isCancelled] method,

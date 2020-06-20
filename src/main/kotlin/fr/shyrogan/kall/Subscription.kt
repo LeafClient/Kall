@@ -50,22 +50,3 @@ abstract class FilteredSubscription<T: Any>(
         override val topic: Class<T>, override val priority: Int,
         override val filters: Array<Filter<T>>
 ): Subscription<T>
-
-/**
- * Inline function that allows you to create a fast [Subscription] for
- * dispatchers
- */
-@JvmOverloads
-inline fun <reified T: Any> subscription(
-        priority: Int = 0, filters: Array<Filter<T>> = emptyArray(), crossinline handler: SubscriptionHandler<T>
-): Subscription<T> {
-    if(filters.isEmpty())
-        return object: NonFilteredSubscription<T>(T::class.java, priority) { override fun receive(message: T) = handler(message) }
-
-    return object : FilteredSubscription<T>(T::class.java, priority, filters) {
-        override fun receive(message: T) {
-            if(filters.any { !it.passes(message) })
-                handler(message)
-        }
-    }
-}

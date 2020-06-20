@@ -12,10 +12,19 @@ store it into a variable for example:
 object MyEventBus: EventBus()
 ````
 
-Now, you need to declare subscriptions, the inline funtion ``subscription`` allows
-us to create a  subscription with Kotlin:
+Now, you need to declare subscriptions  
+First, implement the `Receiver` interface:
 ````kotlin
-val onMessage = subscription<String>(priority = 0, filters = emptyArray()) { message ->
+class MyClass: Receiver {
+
+    override val subscriptions = LinkedList()
+
+}
+````
+The inline function ``subscription`` allows us to create a 
+subscription with Kotlin:
+````kotlin
+private val onMessage = subscription<String>(priority = 0, filters = emptyArray()) { message ->
     // Now you can use message!
     println("Received $message !")
 }
@@ -25,7 +34,7 @@ just shows you they are available.
 
 Now we just need to register our class instance to the EventManager using
 ````kotlin
-MyEventBus.exploreAndRegister(classInstance)
+MyEventBus.register(classInstance)
 ````
 and call our message using
 ````kotlin
