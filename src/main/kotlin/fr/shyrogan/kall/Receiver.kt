@@ -20,7 +20,7 @@ interface Receiver {
  */
 @JvmOverloads
 inline fun <reified T: Any> Receiver.subscription(
-    priority: Int = 0, filters: Array<Filter<T>> = emptyArray(), crossinline handler: SubscriptionHandler<T>
+        priority: Int = 0, filters: Array<Filter<T>> = emptyArray(), crossinline handler: SubscriptionHandler<T>
 ): Subscription<T> {
     if(filters.isEmpty())
         return object: NonFilteredSubscription<T>(T::class.java, priority) { override fun receive(message: T) = handler(message) }.also {
