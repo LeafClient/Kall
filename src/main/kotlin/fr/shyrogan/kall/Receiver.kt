@@ -26,10 +26,6 @@ abstract class Receiver {
                 .groupBy(Subscription<*>::topic)
     }
 
-    fun d() {
-
-    }
-
 }
 
 /**
