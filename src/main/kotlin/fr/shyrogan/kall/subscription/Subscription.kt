@@ -1,4 +1,4 @@
-package fr.shyrogan.kall
+package fr.shyrogan.kall.subscription
 
 typealias SubscriptionHandler<T> = (T) -> Unit
 

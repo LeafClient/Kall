@@ -1,16 +1,12 @@
 package fr.shyrogan.kall.message
 
 /**
- * Represents an object that can be cancelled using the [isCancelled] method,
- * if a cancellable message is published and cancelled, it breaks the publish.
+ * [Cancellable] messages are a specific kind of message written to be "cancelled". In that case,
+ * the event bus will break the call iteration and will not call future subscriptions to avoid
+ * conflicts.
  */
 abstract class Cancellable(var isCancelled: Boolean = false) {
 
-    /**
-     * Cancels this [Cancellable] object
-     */
-    fun cancel() = apply {
-        isCancelled = true
-    }
+    fun cancel() = apply { isCancelled = true }
 
 }

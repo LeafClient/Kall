@@ -1,5 +1,7 @@
 package fr.shyrogan.kall
 
+import fr.shyrogan.kall.subscription.*
+
 /**
  * A [Receiver] is used by Kall to mark a class which contains subscriptions, only these marked classes
  * can register subscriptions.
@@ -13,7 +15,19 @@ abstract class Receiver {
     val subscriptions by lazy {
         javaClass.declaredFields
                 .filter { Subscription::class.java.isAssignableFrom(it.type) }
-                .map { it[this] as Subscription<*> }
+                .map {
+                    val wasAccessible = it.isAccessible
+                    it.isAccessible = true
+                    val subscription = it[this] as Subscription<*>
+                    it.isAccessible = wasAccessible
+
+                    subscription
+                }
+                .groupBy(Subscription<*>::topic)
+    }
+
+    fun d() {
+
     }
 
 }

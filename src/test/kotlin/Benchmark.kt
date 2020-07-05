@@ -1,6 +1,6 @@
 import fr.shyrogan.kall.EventBus
 import fr.shyrogan.kall.Receiver
-import fr.shyrogan.kall.Subscription
+import fr.shyrogan.kall.subscription.Subscription
 import fr.shyrogan.kall.subscription
 import kotlin.system.measureNanoTime
 
@@ -15,6 +15,9 @@ object Benchmark {
 
     init {
         bus.register(StringReceiver())
+        bus.register(StringReceiver())
+        bus.register(StringReceiver())
+        bus.register(StringReceiver())
     }
 
     fun runRegistration(): Long = measureNanoTime {
@@ -26,14 +29,12 @@ object Benchmark {
     }
 
     fun runInvoke(): Long = measureNanoTime {
-        for(i in 0..1_000_000) {
-            bus.dispatch("")
+        for(i in 0 until 1_000_000) {
+            bus.dispatch(" aaa aa")
         }
     }
 
-    class StringReceiver: Receiver {
-        override val subscriptions = mutableListOf<Subscription<*>>()
-
+    class StringReceiver: Receiver() {
         private val onString = subscription<String> {}
     }
 

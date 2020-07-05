@@ -1,4 +1,4 @@
-package fr.shyrogan.kall
+package fr.shyrogan.kall.subscription
 
 /**
  * [Filter] are used to invoke a listener only if [T] message returns true when [passes] is

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "fr.shyrogan"
-version = "1.1.1"
+version = "1.2.0"
 
 repositories {
     maven("https://dl.bintray.com/kotlin/kotlin-eap")

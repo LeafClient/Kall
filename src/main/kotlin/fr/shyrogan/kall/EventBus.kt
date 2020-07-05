@@ -1,90 +1,41 @@
 package fr.shyrogan.kall
 
-import fr.shyrogan.kall.dispatch.Dispatcher
-import fr.shyrogan.kall.dispatch.DispatcherFactories
+import fr.shyrogan.kall.subscription.Subscription
 
 @Suppress("unchecked_cast")
-open class EventBus() {
+open class EventBus {
 
-    /**
-     * Associates a class to its [Dispatcher] instance.
-     */
-    private val dispatcherMap = mutableMapOf<Class<*>, Dispatcher<*>>()
+    private val cache = mutableMapOf<Class<*>, MutableList<Subscription<*>>>()
 
-    /**
-     * Registers each subscriptions contained by the [receiver]
-     */
-    fun register(receiver: Receiver) = receiver.subscriptions.forEach {
-        register(it)
+    fun register(receiver: Receiver) {
+        receiver.subscriptions.forEach { (topic, subscriptions) ->
+            cache[topic]?.addAll(subscriptions) ?: cache.put(topic, subscriptions.toMutableList())
+        }
     }
 
-    /**
-     * Registers each subscriptions contained by the [receiver]
-     */
-    fun unregister(receiver: Receiver) = receiver.subscriptions.forEach {
-        unregister(it)
+    fun unregister(receiver: Receiver) {
+        receiver.subscriptions.forEach { (topic, subscriptions) ->
+            cache[topic]?.removeAll(subscriptions)
+        }
     }
 
-    /**
-     * Registers [subscription] to its dispatcher
-     */
-    fun <T: Any> register(subscription: Subscription<T>) {
-        val dispatcherInstance = dispatcherMap[subscription.topic]
-                ?: DispatcherFactories.findFor(listOf(subscription))
-        dispatcherInstance as Dispatcher<T>
+    fun <T: Any> add(subscription: Subscription<T>)
+            = plusAssign(subscription)
 
-        dispatcherMap[subscription.topic] = dispatcherInstance.register(subscription)
-    }
+    operator fun <T: Any> plusAssign(subscription: Subscription<T>)
+            = cache.getOrPut(subscription.topic) { ArrayList() }.plusAssign(subscription)
 
-    /**
-     * Unregisters [subscription] to its dispatcher
-     */
-    fun <T: Any> unregister(subscription: Subscription<T>) {
-        val dispatcherInstance = dispatcherMap[subscription.topic]
-                ?: DispatcherFactories.findFor(listOf(subscription))
-        dispatcherInstance as Dispatcher<T>
+    fun <T: Any> remove(subscription: Subscription<T>)
+            = minusAssign(subscription)
 
-        dispatcherMap[subscription.topic] = dispatcherInstance.unregister(subscription)
-    }
+    operator fun <T: Any> minusAssign(subscription: Subscription<T>)
+            = cache.getOrPut(subscription.topic) { ArrayList() }.minusAssign(subscription)
 
-    /**
-     * Registers [subscription] to its dispatcher
-     */
-    fun <T: Any> registerAll(subscription: List<Subscription<T>>) {
-        if(subscription.isEmpty())
-            return
-
-        val topic = subscription[0].topic
-        val dispatcherInstance = dispatcherMap[topic]
-                ?: DispatcherFactories.findFor(subscription)
-        dispatcherInstance as Dispatcher<T>
-
-        dispatcherMap[topic] = dispatcherInstance.registerAll(subscription)
-    }
-
-    /**
-     * Unregisters [subscription] to its dispatcher
-     */
-    fun <T: Any> unregisterAll(subscription: List<Subscription<T>>) {
-        if(subscription.isEmpty())
-            return
-
-        val topic = subscription[0].topic
-        val dispatcherInstance = dispatcherMap[topic]
-                ?: return
-        dispatcherInstance as Dispatcher<T>
-
-        dispatcherMap[topic] = dispatcherInstance.unregisterAll(subscription)
-    }
-
-    /**
-     * Dispatch [message] to the concerned [Dispatcher] if it exists.
-     */
     fun <T: Any> dispatch(message: T): T {
-        val dispatcherInstance = dispatcherMap[message::class.java] ?: return message
-        dispatcherInstance as Dispatcher<T>
+        val subscriptions = cache[message::class.java] ?: return message
+        val dispatcher = Dispatcher.optimizedFor(subscriptions as MutableList<Subscription<T>>)
 
-        dispatcherInstance.dispatch(message)
+        dispatcher.dispatch(message)
         return message
     }
 
