@@ -15,9 +15,7 @@ object MyEventBus: EventBus()
 Now, you need to declare subscriptions  
 First, implement the `Receiver` interface:
 ````kotlin
-class MyClass: Receiver {
-
-    override val subscriptions = LinkedList()
+class MyClass: Receiver() {
 
 }
 ````
