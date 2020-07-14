@@ -41,7 +41,7 @@ inline fun <reified T: Any> Receiver.subscription(
 
     return object : FilteredSubscription<T>(T::class.java, priority, filters) {
         override fun receive(message: T) {
-            if(filters.any { !it.passes(message) })
+            if(filters.none { !it.passes(message) })
                 handler(message)
         }
     }
