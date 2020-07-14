@@ -2,6 +2,7 @@ import fr.shyrogan.kall.EventBus
 import fr.shyrogan.kall.Receiver
 import fr.shyrogan.kall.subscription.Subscription
 import fr.shyrogan.kall.subscription
+import fr.shyrogan.kall.subscription.filter
 import kotlin.system.measureNanoTime
 
 fun main() {
@@ -35,7 +36,7 @@ object Benchmark {
     }
 
     class StringReceiver: Receiver() {
-        private val onString = subscription<String> {}
+        private val onString = subscription<Double>(filters = arrayOf(filter<Number> { it.toDouble() > 0 })) {}
     }
 
 }

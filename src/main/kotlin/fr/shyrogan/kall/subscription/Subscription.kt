@@ -20,7 +20,7 @@ interface Subscription<T: Any> {
     /**
      * Returns the [Filter] instances
      */
-    val filters: Array<Filter<T>>
+    val filters: Array<Filter<in T>>
 
     /**
      * Method invoked when [message] is received
@@ -39,7 +39,7 @@ abstract class NonFilteredSubscription<T: Any>(
     /**
      * Returns an empty array
      */
-    override val filters: Array<Filter<T>> = emptyArray()
+    override val filters: Array<Filter<in T>> = emptyArray()
 }
 
 /**
@@ -48,5 +48,5 @@ abstract class NonFilteredSubscription<T: Any>(
  */
 abstract class FilteredSubscription<T: Any>(
         override val topic: Class<T>, override val priority: Int,
-        override val filters: Array<Filter<T>>
+        override val filters: Array<Filter<in T>>
 ): Subscription<T>
